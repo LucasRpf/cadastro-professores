@@ -1,0 +1,1031 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadastro de Professores</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f6f8;
+      color: #17202a;
+    }
+
+    header {
+      background: #155a76;
+      color: #ffffff;
+      padding: 22px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.7rem;
+    }
+
+    header p {
+      margin: 6px 0 0;
+    }
+
+    .page {
+      width: min(1380px, 100%);
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 310px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    main {
+      display: grid;
+      gap: 18px;
+    }
+
+    .teacher-sidebar {
+      background: #ffffff;
+      border: 1px solid #d8dee7;
+      border-radius: 8px;
+      padding: 14px;
+      position: sticky;
+      top: 12px;
+      max-height: calc(100vh - 24px);
+      overflow: auto;
+    }
+
+    .teacher-sidebar h2 {
+      margin-bottom: 6px;
+    }
+
+    .teacher-sidebar p {
+      margin: 0 0 12px;
+      color: #687180;
+      font-size: 0.92rem;
+    }
+
+    .teacher-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .teacher-name {
+      min-height: 34px;
+      padding: 7px 9px;
+      border: 1px solid #d8dee7;
+      background: #f7fafc;
+      color: #17202a;
+      border-radius: 6px;
+      text-align: left;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .teacher-name.saved {
+      border-color: #1d8c5a;
+      background: #e5f6ee;
+      color: #12613d;
+    }
+
+    section {
+      background: #ffffff;
+      border: 1px solid #d8dee7;
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 1.25rem;
+      color: #155a76;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      min-height: 42px;
+      font: inherit;
+      border-radius: 6px;
+    }
+
+    input,
+    select {
+      border: 1px solid #b9c3cf;
+      background: #ffffff;
+      padding: 9px 10px;
+      color: #17202a;
+    }
+
+    input:focus,
+    select:focus {
+      outline: 3px solid rgba(29, 111, 143, 0.2);
+      border-color: #1d6f8f;
+    }
+
+    button {
+      border: 1px solid #155a76;
+      background: #155a76;
+      color: #ffffff;
+      padding: 0 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #ffffff;
+      color: #155a76;
+    }
+
+    button.danger {
+      border-color: #b33a2c;
+      background: #ffffff;
+      color: #b33a2c;
+    }
+
+    .assignment-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+      padding: 14px;
+      background: #f7fafc;
+      border: 1px solid #d8dee7;
+      border-radius: 8px;
+    }
+
+    .assignment-box button {
+      min-width: 120px;
+    }
+
+    .assignment-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .assignment-item,
+    .record {
+      border: 1px solid #d8dee7;
+      border-radius: 8px;
+      padding: 12px;
+      background: #ffffff;
+    }
+
+    .assignment-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .assignment-item button,
+    .record button {
+      width: auto;
+      min-height: 34px;
+    }
+
+    .form-actions,
+    .toolbar,
+    .record-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .toolbar {
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    .toolbar input {
+      flex: 1 1 260px;
+    }
+
+    .toolbar button,
+    .form-actions button {
+      width: auto;
+    }
+
+    .record {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .record h3 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .record p {
+      margin: 0;
+      color: #4c5967;
+    }
+
+    .empty {
+      color: #687180;
+      padding: 14px 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .admin-status {
+      margin-top: 10px;
+      color: #4c5967;
+      font-weight: 700;
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .teacher-sidebar {
+        position: static;
+        max-height: 360px;
+      }
+
+      .grid,
+      .assignment-box {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar button,
+      .form-actions button,
+      .assignment-box button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Cadastro de Professores</h1>
+    <p>Preencha os dados pessoais e relacione cada turma com a disciplina correspondente.</p>
+  </header>
+
+  <div class="page">
+    <aside class="teacher-sidebar">
+      <h2>Professores</h2>
+      <p>Os nomes ficam verdes depois que o cadastro é salvo.</p>
+      <div class="teacher-list" id="teacherList"></div>
+    </aside>
+
+  <main>
+    <section>
+      <h2>Dados pessoais</h2>
+      <form id="teacherForm">
+        <input type="hidden" id="recordId" name="recordId">
+
+        <div class="grid">
+          <div>
+            <label for="name">Nome completo</label>
+            <input id="name" name="name" required>
+          </div>
+          <div>
+            <label for="email">E-mail</label>
+            <input id="email" name="email" type="email" required>
+          </div>
+          <div>
+            <label for="cpf">CPF</label>
+            <input id="cpf" name="cpf" required>
+          </div>
+          <div>
+            <label for="rg">RG</label>
+            <input id="rg" name="rg" required>
+          </div>
+          <div>
+            <label for="issuingAgency">Órgão emissor</label>
+            <input id="issuingAgency" name="issuingAgency" required>
+          </div>
+          <div>
+            <label for="birthDate">Data de nascimento</label>
+            <input id="birthDate" name="birthDate" type="date" required>
+          </div>
+          <div class="full">
+            <label for="address">Endereço</label>
+            <input id="address" name="address" required>
+          </div>
+          <div>
+            <label for="addressNumber">Número</label>
+            <input id="addressNumber" name="addressNumber" required>
+          </div>
+          <div>
+            <label for="neighborhood">Bairro</label>
+            <input id="neighborhood" name="neighborhood" required>
+          </div>
+          <div>
+            <label for="city">Município</label>
+            <input id="city" name="city" required>
+          </div>
+          <div>
+            <label for="contact">Contato</label>
+            <input id="contact" name="contact" required>
+          </div>
+        </div>
+
+        <h2 style="margin-top: 24px;">Turmas e disciplinas</h2>
+        <div class="assignment-box">
+          <div>
+            <label for="gradeSelect">Turma</label>
+            <select id="gradeSelect">
+              <option value="">Selecione a turma</option>
+            </select>
+          </div>
+          <div>
+            <label for="subjectSelect">Disciplina</label>
+            <select id="subjectSelect">
+              <option value="">Selecione a disciplina</option>
+            </select>
+          </div>
+          <button type="button" id="addAssignmentButton">Adicionar</button>
+        </div>
+
+        <div class="assignment-list" id="assignments"></div>
+
+        <div class="form-actions">
+          <button type="submit" id="saveButton">Salvar dados</button>
+          <button class="secondary" type="button" id="clearTextButton">Limpar campos de texto</button>
+          <button class="secondary" type="button" id="cancelEditButton">Cancelar edição</button>
+        </div>
+      </form>
+    </section>
+
+    <section>
+      <h2>Área do administrador</h2>
+      <div id="loginBox">
+        <div class="grid">
+          <div>
+            <label for="adminPassword">Senha do admin</label>
+            <input id="adminPassword" type="password" autocomplete="current-password">
+          </div>
+          <div style="align-self: end;">
+            <button type="button" id="adminLoginButton">Entrar como admin</button>
+          </div>
+        </div>
+      </div>
+      <div id="adminBox" class="hidden">
+        <p class="admin-status">Admin logado. Os registros completos estão visíveis abaixo.</p>
+        <button class="secondary" type="button" id="adminLogoutButton">Sair do admin</button>
+      </div>
+    </section>
+
+    <section id="adminPanel" class="hidden">
+      <h2>Registros salvos</h2>
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="Buscar por nome, turma ou disciplina">
+        <button class="secondary" type="button" id="exportButton">Exportar CSV</button>
+        <button class="secondary" type="button" id="exportPdfButton">Exportar PDF</button>
+        <button class="danger" type="button" id="clearAllButton">Apagar todos</button>
+      </div>
+      <div id="records"></div>
+    </section>
+  </main>
+  </div>
+
+  <script>
+    const storageKey = "cadastro-docente-registros";
+    const form = document.querySelector("#teacherForm");
+    const assignmentsEl = document.querySelector("#assignments");
+    const recordsEl = document.querySelector("#records");
+    const searchEl = document.querySelector("#search");
+    const gradeSelectEl = document.querySelector("#gradeSelect");
+    const subjectSelectEl = document.querySelector("#subjectSelect");
+    const teacherListEl = document.querySelector("#teacherList");
+    const loginBoxEl = document.querySelector("#loginBox");
+    const adminBoxEl = document.querySelector("#adminBox");
+    const adminPanelEl = document.querySelector("#adminPanel");
+    const adminPasswordEl = document.querySelector("#adminPassword");
+    const adminTokenKey = "cadastro-professores-admin-token";
+
+    const gradeOptions = ["6° A", "6° B", "6° C", "6° D", "6° E", "7° A", "7° B", "7° C", "7° D", "7° E", "8° A", "8° B", "8° C", "8° D", "8° E", "9° A", "9° B", "9° C", "9° D", "9° E"];
+    const subjectOptions = ["Ling Port I", "Ling Port II", "Inglês", "Artes", "Educação Física", "Mat I", "Mat II", "Ciências", "História", "Geografia", "Form. Humana", "Ofic. Narrat.", "Círculo Leit.", "Port. Conect", "Mat. Conect", "Ofic. Finanças", "Ativ Artísticas", "Valoriz. Cultural", "CAERER", "Cult. Digital", "Proj. caminhar", "Estudo Orientado"];
+    const teacherNames = [
+      "Adeildo da Silva Valença",
+      "Adjalmo Pereira Filho",
+      "Adriano de Jesus Lima",
+      "Alana Leite de Oliveira",
+      "Alessandra de Sousa Gonçalves",
+      "Amanda Souza de Oliveira",
+      "Ana Alzira Lucena Nicodemos",
+      "Ana Paula Santana Tavares",
+      "Ana Teresa Quental Santana",
+      "Arlany Emanuel da Silva",
+      "Cícera Edna Gomes de Souza",
+      "Diego Vieira Rolim",
+      "Edileuza Batista de Oliveira",
+      "Edjan Fernandes dos Santos",
+      "Eliane Lucena",
+      "Elita Maria Alves de Macêdo Cavalcante",
+      "Emanuella de Sousa Ramalho",
+      "Fábio Alex Saraiva Cruz",
+      "Flávio Leite Queirós",
+      "Francisca Laís Arruda Pereira",
+      "Francisco Bruno Tavares Silva",
+      "Francisco Fabrício de Lacerda Ferreira",
+      "Francisco Ivan Sampaio Sousa",
+      "Francisco Ricael Oliveira Janoca",
+      "Gabriel Sampaio Campos",
+      "Hildernandes Lima Dias",
+      "Hudson Mendes Araújo",
+      "Ian Albert Stephen Mundy",
+      "Janaína Pereira Sobreira de Aguiar",
+      "Jeilson Oliveira da Silva",
+      "Joélio Lormira Feitosa",
+      "Jonas Fernandes de Lima Neto",
+      "Jonatas Targino de Amorim",
+      "José Marcos Ferreira Rocha",
+      "José Roberto da Silva",
+      "José Robson Rocha da Silva",
+      "Josefa Fernanda Rodrigues Correia",
+      "Josemar de Medeiros Cruz",
+      "Juliana Máyra Pereira de Souza",
+      "Kássia Mayra Silva Santos",
+      "Kelly Cristina da Fonseca Saraiva",
+      "Luis Carlos dos Santos",
+      "Manoel Tenório da Silva",
+      "Maria Anislaine Sampaio de Lima",
+      "Maria Auxiliadora de O Neta Tavares",
+      "Maria Beatriz Santos de Araújo",
+      "Maria de Fátima Camilo",
+      "Maria Elaine Alves Mariano",
+      "Maria Helenita Alcântara de Oliveira",
+      "Marilene Queiroz de Souza",
+      "Mauri Ferreira Gomes",
+      "Rita Vital dos Santos",
+      "Rosa Mikelliny Santos Silva Brito",
+      "Sabrina Salviano de Medeiros",
+      "Thiago Henrille Gomes Maia",
+      "Tiago Henrique Araújo dos Santos",
+      "Vanessa do Nascimento Pinho",
+      "Viviane Souza Vidal de Melo"
+    ];
+
+    let records = [];
+    let assignments = [];
+    let adminToken = localStorage.getItem(adminTokenKey) || "";
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function fillSelect(select, options, placeholder) {
+      select.innerHTML = `<option value="">${placeholder}</option>` + options
+        .map((option) => `<option value="${escapeHtml(option)}">${escapeHtml(option)}</option>`)
+        .join("");
+    }
+
+    function normalizeName(name) {
+      return String(name || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+    }
+
+    async function loadRecords() {
+      if (!adminToken) {
+        records = [];
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/records", {
+          headers: { Authorization: `Bearer ${adminToken}` }
+        });
+        if (!response.ok) throw new Error("Falha ao carregar dados");
+        records = (await response.json()).map((record) => ({
+          ...record,
+          id: record.id || createId()
+        }));
+      } catch (error) {
+        adminToken = "";
+        localStorage.removeItem(adminTokenKey);
+        records = [];
+        alert("Login do admin expirou ou falhou. Entre novamente.");
+      }
+    }
+
+    async function saveRecords() {
+      const response = await fetch("/api/records", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${adminToken}`
+        },
+        body: JSON.stringify(records)
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao salvar os dados no servidor");
+      }
+    }
+
+    async function submitPublicRecord(record) {
+      const response = await fetch("/api/records", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(record)
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao enviar cadastro");
+      }
+    }
+
+    async function deleteRecordOnline(id) {
+      const response = await fetch(`/api/records?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${adminToken}` }
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao excluir o registro no servidor");
+      }
+
+      const result = await response.json();
+      records = Array.isArray(result.records) ? result.records : records.filter((item) => item.id !== id);
+      localStorage.setItem(storageKey, JSON.stringify(records));
+    }
+
+    function createId() {
+      if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+        return crypto.randomUUID();
+      }
+      return `prof-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function formatAssignments(list) {
+      return (list || []).map((item) => `${item.grade} - ${item.subject}`).join("; ");
+    }
+
+    function normalizeAssignments(record) {
+      if (Array.isArray(record.assignments)) {
+        return record.assignments.filter((item) => item.grade && item.subject);
+      }
+
+      const grades = String(record.grade || "").split(",").map((item) => item.trim()).filter(Boolean);
+      const subjects = String(record.subject || "").split(",").map((item) => item.trim()).filter(Boolean);
+      const total = Math.max(grades.length, subjects.length);
+
+      return Array.from({ length: total }, (_, index) => ({
+        grade: grades[index] || grades[0] || "",
+        subject: subjects[index] || subjects[0] || ""
+      })).filter((item) => item.grade && item.subject);
+    }
+
+    function renderAssignments() {
+      if (assignments.length === 0) {
+        assignmentsEl.innerHTML = `<div class="empty">Nenhuma turma e disciplina adicionada.</div>`;
+        return;
+      }
+
+      assignmentsEl.innerHTML = assignments.map((item, index) => `
+        <div class="assignment-item">
+          <span><strong>${escapeHtml(item.grade)}</strong> - ${escapeHtml(item.subject)}</span>
+          <button class="danger" type="button" data-remove-assignment="${index}">Remover</button>
+        </div>
+      `).join("");
+    }
+
+    function getFormData() {
+      const data = Object.fromEntries(new FormData(form).entries());
+      return Object.fromEntries(Object.entries(data).map(([key, value]) => [key, String(value).trim()]));
+    }
+
+    function resetForm() {
+      form.reset();
+      document.querySelector("#recordId").value = "";
+      gradeSelectEl.value = "";
+      subjectSelectEl.value = "";
+      assignments = [];
+      renderAssignments();
+      document.getElementById("saveButton").textContent = "Salvar dados";
+    }
+
+    function clearTextFields() {
+      ["name", "email", "cpf", "rg", "issuingAgency", "birthDate", "address", "addressNumber", "neighborhood", "city", "contact"].forEach((id) => {
+        const field = document.getElementById(id);
+        if (field) field.value = "";
+      });
+    }
+
+    function cancelEdit() {
+      resetForm();
+    }
+
+    function renderTeacherList() {
+      const savedNames = new Set(records.map((record) => normalizeName(record.name)));
+      teacherListEl.innerHTML = teacherNames.map((name) => {
+        const saved = adminToken && savedNames.has(normalizeName(name)) ? " saved" : "";
+        return `<button class="teacher-name${saved}" type="button" data-teacher-name="${escapeHtml(name)}">${escapeHtml(name)}</button>`;
+      }).join("");
+    }
+
+    function setAdminMode(enabled) {
+      loginBoxEl.classList.toggle("hidden", enabled);
+      adminBoxEl.classList.toggle("hidden", !enabled);
+      adminPanelEl.classList.toggle("hidden", !enabled);
+    }
+
+    async function adminLogin() {
+      const password = adminPasswordEl.value;
+      if (!password) {
+        alert("Digite a senha do admin.");
+        return;
+      }
+
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password })
+      });
+
+      if (!response.ok) {
+        alert("Senha de admin inválida ou não configurada.");
+        return;
+      }
+
+      const result = await response.json();
+      adminToken = result.token;
+      localStorage.setItem(adminTokenKey, adminToken);
+      adminPasswordEl.value = "";
+      setAdminMode(true);
+      await loadRecords();
+      renderTeacherList();
+      renderRecords();
+    }
+
+    function adminLogout() {
+      adminToken = "";
+      localStorage.removeItem(adminTokenKey);
+      records = [];
+      setAdminMode(false);
+      renderTeacherList();
+      renderRecords();
+    }
+
+    function renderRecords() {
+      const query = searchEl.value.trim().toLowerCase();
+      const visibleRecords = records
+        .map((record, index) => ({ record, index }))
+        .filter(({ record }) => {
+        const text = [record.name, record.email, formatAssignments(normalizeAssignments(record))].join(" ").toLowerCase();
+        return text.includes(query);
+      });
+
+      if (visibleRecords.length === 0) {
+        recordsEl.innerHTML = `<div class="empty">${records.length ? "Nenhum registro encontrado." : "Nenhum professor cadastrado ainda."}</div>`;
+        return;
+      }
+
+      recordsEl.innerHTML = visibleRecords.map(({ record, index }) => `
+        <article class="record">
+          <h3>${escapeHtml(record.name)}</h3>
+          <p>${escapeHtml(record.email)}</p>
+          <p><strong>Contato:</strong> ${escapeHtml(record.contact)}</p>
+          <p><strong>Turmas e disciplinas:</strong> ${escapeHtml(formatAssignments(normalizeAssignments(record)))}</p>
+          <div class="record-actions">
+            <button class="secondary" type="button" data-edit-index="${index}">Editar</button>
+            <button class="danger" type="button" data-delete="${record.id}">Excluir</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function setFieldValue(id, value) {
+      const field = document.getElementById(id);
+      if (!field) return;
+      field.disabled = false;
+      field.readOnly = false;
+      field.removeAttribute("disabled");
+      field.removeAttribute("readonly");
+      field.value = value || "";
+      field.defaultValue = value || "";
+    }
+
+    function editRecord(index) {
+      const record = records[index];
+      if (!record) {
+        alert("Não foi possível encontrar este registro para editar.");
+        return;
+      }
+
+      setFieldValue("recordId", record.id);
+      setFieldValue("name", record.name);
+      setFieldValue("email", record.email);
+      setFieldValue("cpf", record.cpf);
+      setFieldValue("rg", record.rg);
+      setFieldValue("issuingAgency", record.issuingAgency);
+      setFieldValue("birthDate", record.birthDate);
+      setFieldValue("address", record.address);
+      setFieldValue("addressNumber", record.addressNumber);
+      setFieldValue("neighborhood", record.neighborhood);
+      setFieldValue("city", record.city);
+      setFieldValue("contact", record.contact || record.phone);
+      assignments = normalizeAssignments(record);
+      renderAssignments();
+      document.getElementById("saveButton").textContent = "Atualizar dados";
+      window.scrollTo(0, 0);
+    }
+
+    function exportCsv() {
+      if (records.length === 0) {
+        alert("Não há registros para exportar.");
+        return;
+      }
+
+      const headers = ["Nome completo", "E-mail", "CPF", "RG", "Órgão emissor", "Data de nascimento", "Endereço", "Número", "Bairro", "Município", "Contato", "Turmas e disciplinas"];
+      const rows = records.map((record) => [
+        record.name,
+        record.email,
+        record.cpf,
+        record.rg,
+        record.issuingAgency,
+        record.birthDate,
+        record.address,
+        record.addressNumber,
+        record.neighborhood,
+        record.city,
+        record.contact,
+        formatAssignments(normalizeAssignments(record))
+      ]);
+
+      const csv = [headers, ...rows]
+        .map((row) => row.map((cell) => `"${String(cell || "").replaceAll('"', '""')}"`).join(";"))
+        .join("\n");
+
+      const blob = new Blob([`\ufeff${csv}`], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "dados-professores.csv";
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportPdf() {
+      if (records.length === 0) {
+        alert("Não há registros para exportar.");
+        return;
+      }
+
+      const pages = records.map((record) => `
+        <section class="page">
+          <h1>${escapeHtml(record.name)}</h1>
+          <table>
+            <tr><th>Nome completo</th><td>${escapeHtml(record.name)}</td></tr>
+            <tr><th>E-mail</th><td>${escapeHtml(record.email)}</td></tr>
+            <tr><th>CPF</th><td>${escapeHtml(record.cpf)}</td></tr>
+            <tr><th>RG</th><td>${escapeHtml(record.rg)}</td></tr>
+            <tr><th>Órgão emissor</th><td>${escapeHtml(record.issuingAgency)}</td></tr>
+            <tr><th>Data de nascimento</th><td>${escapeHtml(record.birthDate)}</td></tr>
+            <tr><th>Endereço</th><td>${escapeHtml(record.address)}</td></tr>
+            <tr><th>Número</th><td>${escapeHtml(record.addressNumber)}</td></tr>
+            <tr><th>Bairro</th><td>${escapeHtml(record.neighborhood)}</td></tr>
+            <tr><th>Município</th><td>${escapeHtml(record.city)}</td></tr>
+            <tr><th>Contato</th><td>${escapeHtml(record.contact)}</td></tr>
+            <tr><th>Turmas e disciplinas</th><td>${escapeHtml(formatAssignments(normalizeAssignments(record)))}</td></tr>
+          </table>
+        </section>
+      `).join("");
+
+      const report = window.open("", "_blank");
+      if (!report) {
+        alert("O navegador bloqueou a janela do PDF. Permita pop-ups para este site e tente novamente.");
+        return;
+      }
+
+      report.document.write(`
+        <!doctype html>
+        <html lang="pt-BR">
+        <head>
+          <meta charset="utf-8">
+          <title>Dados dos professores</title>
+          <style>
+            * { box-sizing: border-box; }
+            body {
+              margin: 0;
+              font-family: Arial, Helvetica, sans-serif;
+              color: #17202a;
+              background: #ffffff;
+            }
+            .page {
+              min-height: 100vh;
+              padding: 28px;
+              page-break-after: always;
+            }
+            .page:last-child {
+              page-break-after: auto;
+            }
+            h1 {
+              margin: 0 0 18px;
+              color: #155a76;
+              font-size: 24px;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 14px;
+            }
+            th, td {
+              border: 1px solid #cfd7e2;
+              padding: 9px 10px;
+              text-align: left;
+              vertical-align: top;
+            }
+            th {
+              width: 34%;
+              background: #f3f6f8;
+            }
+            @page {
+              size: A4;
+              margin: 12mm;
+            }
+            @media print {
+              body { background: #ffffff; }
+              .page { min-height: auto; }
+            }
+          </style>
+        </head>
+        <body>${pages}</body>
+        </html>
+      `);
+      report.document.close();
+      report.focus();
+      report.print();
+    }
+
+    document.querySelector("#addAssignmentButton").addEventListener("click", () => {
+      const grade = gradeSelectEl.value;
+      const subject = subjectSelectEl.value;
+
+      if (!grade) {
+        alert("Selecione a turma.");
+        gradeSelectEl.focus();
+        return;
+      }
+
+      if (!subject) {
+        alert("Selecione a disciplina.");
+        subjectSelectEl.focus();
+        return;
+      }
+
+      const exists = assignments.some((item) => item.grade === grade && item.subject === subject);
+      if (exists) {
+        alert("Essa turma e disciplina já foram adicionadas.");
+        return;
+      }
+
+      assignments.push({ grade, subject });
+      subjectSelectEl.value = "";
+      renderAssignments();
+    });
+
+    assignmentsEl.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-remove-assignment]");
+      if (!button) return;
+      assignments.splice(Number(button.dataset.removeAssignment), 1);
+      renderAssignments();
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const data = getFormData();
+
+      if (assignments.length === 0) {
+        alert("Adicione pelo menos uma turma e disciplina.");
+        return;
+      }
+
+      const recordId = data.recordId;
+      const record = { ...data, assignments: [...assignments] };
+
+      try {
+        if (adminToken) {
+          if (recordId) {
+            records = records.map((item) => item.id === recordId ? { ...item, ...record } : item);
+          } else {
+            records.unshift({ ...record, id: createId() });
+          }
+          await saveRecords();
+          renderTeacherList();
+          renderRecords();
+        } else {
+          await submitPublicRecord(record);
+        }
+
+        resetForm();
+        alert("Dados salvos com sucesso.");
+      } catch (error) {
+        alert("Não foi possível salvar online. Tente novamente.");
+      }
+    });
+
+    document.querySelector("#clearTextButton").addEventListener("click", () => {
+      clearTextFields();
+    });
+
+    document.querySelector("#cancelEditButton").addEventListener("click", () => {
+      cancelEdit();
+    });
+
+    document.querySelector("#adminLoginButton").addEventListener("click", adminLogin);
+    document.querySelector("#adminLogoutButton").addEventListener("click", adminLogout);
+    adminPasswordEl.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        adminLogin();
+      }
+    });
+
+    recordsEl.addEventListener("click", async (event) => {
+      const editButton = event.target.closest("[data-edit-index]");
+      const deleteButton = event.target.closest("[data-delete]");
+
+      if (editButton) {
+        editRecord(Number(editButton.dataset.editIndex));
+      }
+
+      if (deleteButton) {
+        const shouldDelete = confirm("Excluir este registro?");
+        if (!shouldDelete) return;
+        try {
+          await deleteRecordOnline(deleteButton.dataset.delete);
+          renderTeacherList();
+          renderRecords();
+        } catch (error) {
+          alert("Não foi possível excluir online. Atualize a página e tente novamente.");
+        }
+      }
+    });
+
+    document.querySelector("#exportButton").addEventListener("click", exportCsv);
+    document.querySelector("#exportPdfButton").addEventListener("click", exportPdf);
+    document.querySelector("#clearAllButton").addEventListener("click", async () => {
+      if (!records.length) return;
+      const shouldClear = confirm("Apagar todos os registros?");
+      if (!shouldClear) return;
+      records = [];
+      try {
+        await saveRecords();
+        renderTeacherList();
+        renderRecords();
+      } catch (error) {
+        alert("Não foi possível apagar os dados no arquivo permanente.");
+      }
+    });
+    searchEl.addEventListener("input", renderRecords);
+
+    teacherListEl.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-teacher-name]");
+      if (!button) return;
+      document.getElementById("name").value = button.dataset.teacherName;
+      document.getElementById("name").focus();
+    });
+
+    async function startApp() {
+      fillSelect(gradeSelectEl, gradeOptions, "Selecione a turma");
+      fillSelect(subjectSelectEl, subjectOptions, "Selecione a disciplina");
+      setAdminMode(Boolean(adminToken));
+      await loadRecords();
+      renderTeacherList();
+      renderAssignments();
+      renderRecords();
+    }
+
+    startApp();
+  </script>
+</body>
+</html>
