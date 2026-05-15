@@ -1,8 +1,11 @@
 import { getStore } from "@netlify/blobs";
 import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 
-const store = getStore("cadastro-professores");
 const key = "dados-professores";
+
+function getRecordsStore() {
+  return getStore({ name: "cadastro-professores", consistency: "strong" });
+}
 
 function getAdminPassword() {
   return process.env.ADMIN_PASSWORD || "";
@@ -55,11 +58,13 @@ function isAdmin(request) {
 }
 
 async function readRecords() {
-  const records = await store.get(key, { type: "json" });
+  const store = getRecordsStore();
+  const records = await store.get(key, { type: "json", consistency: "strong" });
   return Array.isArray(records) ? records : [];
 }
 
 async function writeRecords(records) {
+  const store = getRecordsStore();
   await store.setJSON(key, records);
 }
 
