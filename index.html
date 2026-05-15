@@ -22,6 +22,19 @@
       padding: 22px;
     }
 
+    .header-content {
+      width: min(1380px, 100%);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .header-text {
+      min-width: 0;
+    }
+
     header h1 {
       margin: 0;
       font-size: 1.7rem;
@@ -29,6 +42,15 @@
 
     header p {
       margin: 6px 0 0;
+    }
+
+    .site-logo {
+      width: clamp(115px, 13vw, 180px);
+      height: auto;
+      flex: 0 0 auto;
+      display: block;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.18));
     }
 
     .page {
@@ -260,6 +282,14 @@
     }
 
     @media (max-width: 760px) {
+      .header-content {
+        align-items: flex-start;
+      }
+
+      .site-logo {
+        width: 104px;
+      }
+
       .page {
         grid-template-columns: 1fr;
       }
@@ -284,8 +314,13 @@
 </head>
 <body>
   <header>
-    <h1>Cadastro de Professores</h1>
-    <p>Preencha os dados pessoais e relacione cada turma com a disciplina correspondente.</p>
+    <div class="header-content">
+      <div class="header-text">
+        <h1>Cadastro de Professores</h1>
+        <p>Preencha os dados pessoais e relacione cada turma com a disciplina correspondente.</p>
+      </div>
+      <img class="site-logo" src="assets/lf-sistemas-logo.png" alt="LF Sistemas">
+    </div>
   </header>
 
   <div class="page">
