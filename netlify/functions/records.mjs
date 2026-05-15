@@ -70,6 +70,13 @@ async function writeRecords(records) {
 
 export default async function handler(request) {
   if (request.method === "GET") {
+    const url = new URL(request.url);
+    if (url.searchParams.get("summary") === "names") {
+      const records = await readRecords();
+      const names = records.map((record) => record.name).filter(Boolean);
+      return jsonResponse({ names });
+    }
+
     if (!isAdmin(request)) {
       return jsonResponse({ error: "Acesso restrito ao admin" }, 401);
     }

@@ -488,6 +488,7 @@
     let records = [];
     let assignments = [];
     let adminToken = localStorage.getItem(adminTokenKey) || "";
+    let savedTeacherNames = [];
 
     function escapeHtml(value) {
       return String(value || "")
@@ -533,6 +534,17 @@
         localStorage.removeItem(adminTokenKey);
         records = [];
         alert("Login do admin expirou ou falhou. Entre novamente.");
+      }
+    }
+
+    async function loadSavedTeacherNames() {
+      try {
+        const response = await fetch("/api/records?summary=names");
+        if (!response.ok) throw new Error("Falha ao carregar nomes");
+        const data = await response.json();
+        savedTeacherNames = Array.isArray(data.names) ? data.names : [];
+      } catch (error) {
+        savedTeacherNames = [];
       }
     }
 
@@ -645,9 +657,10 @@
     }
 
     function renderTeacherList() {
-      const savedNames = new Set(records.map((record) => normalizeName(record.name)));
+      const sourceNames = adminToken ? records.map((record) => record.name) : savedTeacherNames;
+      const savedNames = new Set(sourceNames.map((name) => normalizeName(name)));
       teacherListEl.innerHTML = teacherNames.map((name) => {
-        const saved = adminToken && savedNames.has(normalizeName(name)) ? " saved" : "";
+        const saved = savedNames.has(normalizeName(name)) ? " saved" : "";
         return `<button class="teacher-name${saved}" type="button" data-teacher-name="${escapeHtml(name)}">${escapeHtml(name)}</button>`;
       }).join("");
     }
@@ -682,6 +695,7 @@
       adminPasswordEl.value = "";
       setAdminMode(true);
       await loadRecords();
+      savedTeacherNames = records.map((record) => record.name);
       renderTeacherList();
       renderRecords();
     }
@@ -691,6 +705,7 @@
       localStorage.removeItem(adminTokenKey);
       records = [];
       setAdminMode(false);
+      loadSavedTeacherNames().then(renderTeacherList);
       renderTeacherList();
       renderRecords();
     }
@@ -940,10 +955,13 @@
             records.unshift({ ...record, id: createId() });
           }
           await saveRecords();
+          savedTeacherNames = records.map((item) => item.name);
           renderTeacherList();
           renderRecords();
         } else {
           await submitPublicRecord(record);
+          await loadSavedTeacherNames();
+          renderTeacherList();
         }
 
         resetForm();
@@ -983,6 +1001,7 @@
         if (!shouldDelete) return;
         try {
           await deleteRecordOnline(deleteButton.dataset.delete);
+          savedTeacherNames = records.map((item) => item.name);
           renderTeacherList();
           renderRecords();
         } catch (error) {
@@ -1000,6 +1019,7 @@
       records = [];
       try {
         await saveRecords();
+        savedTeacherNames = [];
         renderTeacherList();
         renderRecords();
       } catch (error) {
@@ -1019,7 +1039,9 @@
       fillSelect(gradeSelectEl, gradeOptions, "Selecione a turma");
       fillSelect(subjectSelectEl, subjectOptions, "Selecione a disciplina");
       setAdminMode(Boolean(adminToken));
+      await loadSavedTeacherNames();
       await loadRecords();
+      if (adminToken) savedTeacherNames = records.map((record) => record.name);
       renderTeacherList();
       renderAssignments();
       renderRecords();
