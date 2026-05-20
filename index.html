@@ -850,7 +850,13 @@
         return;
       }
 
-      const pages = records.map((record) => `
+      const sortedRecords = [...records].sort((first, second) => {
+        return String(first.name || "").localeCompare(String(second.name || ""), "pt-BR", {
+          sensitivity: "base"
+        });
+      });
+
+      const pages = sortedRecords.map((record) => `
         <section class="page">
           <h1>${escapeHtml(record.name)}</h1>
           <table>
