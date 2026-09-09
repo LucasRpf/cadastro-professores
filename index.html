@@ -475,6 +475,7 @@
       <div class="toolbar">
         <input id="search" type="search" placeholder="Buscar por nome, turma ou disciplina">
         <button class="secondary" type="button" id="exportButton">Exportar CSV</button>
+        <button class="secondary" type="button" id="exportExcelButton">Exportar Excel</button>
         <button class="secondary" type="button" id="exportPdfButton">Exportar PDF</button>
         <button class="danger" type="button" id="clearAllButton">Apagar todos</button>
       </div>
@@ -483,6 +484,7 @@
   </main>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
   <script>
     const storageKey = "cadastro-docente-registros";
     const form = document.querySelector("#teacherForm");
@@ -885,6 +887,21 @@
       URL.revokeObjectURL(url);
     }
 
+    function exportExcel() {
+      if (!records.length) { alert("Não há registros para exportar."); return; }
+      if (!window.XLSX) { alert("A exportação para Excel ainda está carregando. Tente novamente."); return; }
+      const codes = ["PROFISSIONAL_CPF","PROFISSIONAL_RG","PROFISSIONAL_NOME","PROFISSIONAL_NOME_SOCIAL","PROFISSIONAL_DT_NASCIMENTO","PROFISSIONAL_SEXO","PROFISSIONAL_GENERO","PROFISSIONAL_RACA_COR","PROFISSIONAL_QUILOMBOLA","PROFISSIONAL_NACIONALIDADE","PROFISSIONAL_PAIS_NASCIMENTO","PROFISSIONAL_ESTADO_NASCIMENTO","PROFISSIONAL_MUNICIPIO_NASCIMENTO","PROFISSIONAL_TELEFONE","PROFISSIONAL_E_MAIL","CO_NIVEL_ESCOLARIDADE","CO_TIPO_ENSINO_MEDIO","NATUREZA_INSTITUICAO_MEDIO_PROFISSIONAL","PROFISSIONAL_CO_UF_RES","PROFISSIONAL_CO_MUNICIPIO_RES","PROFISSIONAL_DS_LOGRADOURO_RES","PROFISSIONAL_NU_ENDERECO_RES","PROFISSIONAL_BAIRRO_RES","PROFISSIONAL_CEP_RES","PROFISSIONAL_LOCALIZACAO_GEOGRAFICA","PROFISSIONAL_LOCALIZACAO_DIFERENCIADA","PROFISSIONAL_DEFICIENCIA","CO_TIPO_FORMACAO_ACADEMICA","CO_AREA_DO_CONHECIMENTO_FORMACAO_ACADEMICA","CO_CURSO_FORMACAO_ACADEMICA","NO_INSTITUICAO_ENSINO_FORMACAO_ACADEMICA","NATUREZA_INSTITUICAO_FORMACAO_ACADEMICA","ANO_INICIO_FORMACAO_ACADEMICA","ANO_CONCLUSAO_FORMACAO_ACADEMICA","CO_ENTIDADE_VINCULO","CO_PROFISSIONAL_PERFIL_VINCULO","CO_TIPO_VINCULO","SITUACAO_VINCULO_PROFISSIONAL_REDE","DATA_INICIO_VINCULO_PROFISSIONAL_REDE","DATA_FIM_VINCULO_PROFISSIONAL_REDE","CO_FUNCAO","DATA_INGRESSO","DATA_FIM","CARGA_HORARIA_SEMANAL","PROFISSIONAL_IDENTIFICACAO_INSTITUICAO","AREA_CONHECIMENTO_VINCULO_PROFISSIONAL"];
+      const labels = ["CPF*","RG","Nome*","Nome Social","Data de Nascimento*","Sexo*","Gênero","Raça/Cor*","Autodeclaração quilombola do Profissional da Educação*","Nacionalidade*","País de nascimento*","Estado de nascimento*","Município de nascimento*","Telefone*","E-mail*","Maior nível de escolaridade concluído*","Tipo de Ensino Médio","Natureza da Instituição","Estado*","Município*","Logradouro de Residência","Número de Endereço","Bairro","CEP","Localização Geográfica","Localização Diferenciada","Profissional com deficiência, transtorno do espectro autista ou altas habilidades/superdotação*","Tipo de Formação Superior*","Área do curso*","Curso","Nome da Instituição de Ensino","Tipo da Instituição de Ensino","Ano de Início","Ano de Conclusão","Código INEP da Instituição de Ensino*","Perfil","Tipo de Vínculo*","Situação do Vínculo*","Data de Início do Vínculo*","Data de Fim do Vínculo","Código da função*","Data de Início da Função*","Data do Fim da Função","Carga Horária","Número de Identificação (ID) da Matrícula do Profissional","Área do conhecimento*"];
+      const groups = [["Identificação & Profissional",0,18],["Endereço & Localização",18,26],["Características pessoais & Deficiências",26,27],["Formação Acadêmica (Relacionada a Atuação Prática)",27,34],["Vínculo do profissional",34,45],["Área do conhecimento",45,46]];
+      const legacy = {PROFISSIONAL_CPF:"cpf",PROFISSIONAL_RG:"rg",PROFISSIONAL_NOME:"name",PROFISSIONAL_DT_NASCIMENTO:"birthDate",PROFISSIONAL_TELEFONE:"contact",PROFISSIONAL_E_MAIL:"email",PROFISSIONAL_CO_MUNICIPIO_RES:"city",PROFISSIONAL_DS_LOGRADOURO_RES:"address",PROFISSIONAL_NU_ENDERECO_RES:"addressNumber",PROFISSIONAL_BAIRRO_RES:"neighborhood"};
+      const value = (record, code) => record[code] ?? (legacy[code] ? record[legacy[code]] : "") ?? "";
+      const data = [Array(46).fill(""), codes, labels, ...records.map((record) => codes.map((code) => value(record, code)))];
+      groups.forEach(([title,start]) => { data[0][start] = title; });
+      const sheet = XLSX.utils.aoa_to_sheet(data); sheet["!merges"] = groups.map(([,start,end]) => ({s:{r:0,c:start},e:{r:0,c:end-1}})); sheet["!cols"] = labels.map((label) => ({wch:Math.min(Math.max(label.length+2,14),34)}));
+      for (let c=0;c<codes.length;c++) for (let r=0;r<3;r++) { const cell=sheet[XLSX.utils.encode_cell({r,c})]; if(cell) cell.s={font:{bold:true,color:{rgb:"FFFFFF"}},fill:{fgColor:{rgb:r===0?"17647D":r===1?"2E7D96":"5A8EA0"}},alignment:{vertical:"center",wrapText:true}}; }
+      const workbook = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(workbook,sheet,"Profissionais"); XLSX.writeFile(workbook,"dados-professores-GpE.xlsx");
+    }
+
     function exportPdf() {
       if (records.length === 0) {
         alert("Não há registros para exportar.");
@@ -1090,6 +1107,7 @@
     });
 
     document.querySelector("#exportButton").addEventListener("click", exportCsv);
+    document.querySelector("#exportExcelButton").addEventListener("click", exportExcel);
     document.querySelector("#exportPdfButton").addEventListener("click", exportPdf);
     document.querySelector("#clearAllButton").addEventListener("click", async () => {
       if (!records.length) return;
