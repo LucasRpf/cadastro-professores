@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cadastro de Professores</title>
-  <style>
+<style>
+.assignment-box,#assignments,form > h2:nth-of-type(2){display:none!important}
     * {
       box-sizing: border-box;
     }
@@ -383,6 +384,40 @@
           </div>
         </div>
 
+        <h2 style="margin-top: 24px;">Dados da planilha GpE</h2>
+        <div class="grid gpe-fields">
+          <div><label for="PROFISSIONAL_NOME_SOCIAL">Nome social</label><input id="PROFISSIONAL_NOME_SOCIAL" name="PROFISSIONAL_NOME_SOCIAL"></div>
+          <div><label for="PROFISSIONAL_SEXO">Sexo</label><select id="PROFISSIONAL_SEXO" name="PROFISSIONAL_SEXO"><option value="">Selecione</option><option>Feminino</option><option>Masculino</option><option>Não informado</option></select></div>
+          <div><label for="PROFISSIONAL_GENERO">Gênero</label><input id="PROFISSIONAL_GENERO" name="PROFISSIONAL_GENERO"></div>
+          <div><label for="PROFISSIONAL_RACA_COR">Raça/Cor</label><select id="PROFISSIONAL_RACA_COR" name="PROFISSIONAL_RACA_COR"><option value="">Selecione</option><option>Branca</option><option>Preta</option><option>Parda</option><option>Amarela</option><option>Indígena</option><option>Não declarada</option></select></div>
+          <div><label for="PROFISSIONAL_QUILOMBOLA">Autodeclaração quilombola</label><select id="PROFISSIONAL_QUILOMBOLA" name="PROFISSIONAL_QUILOMBOLA"><option value="">Selecione</option><option>Sim</option><option>Não</option></select></div>
+          <div><label for="PROFISSIONAL_NACIONALIDADE">Nacionalidade</label><input id="PROFISSIONAL_NACIONALIDADE" name="PROFISSIONAL_NACIONALIDADE"></div>
+          <div><label for="PROFISSIONAL_PAIS_NASCIMENTO">País de nascimento</label><input id="PROFISSIONAL_PAIS_NASCIMENTO" name="PROFISSIONAL_PAIS_NASCIMENTO"></div>
+          <div><label for="PROFISSIONAL_ESTADO_NASCIMENTO">Estado de nascimento</label><input id="PROFISSIONAL_ESTADO_NASCIMENTO" name="PROFISSIONAL_ESTADO_NASCIMENTO"></div>
+          <div><label for="PROFISSIONAL_MUNICIPIO_NASCIMENTO">Município de nascimento</label><input id="PROFISSIONAL_MUNICIPIO_NASCIMENTO" name="PROFISSIONAL_MUNICIPIO_NASCIMENTO"></div>
+          <div><label for="PROFISSIONAL_DEFICIENCIA">Deficiência, TEA ou altas habilidades</label><select id="PROFISSIONAL_DEFICIENCIA" name="PROFISSIONAL_DEFICIENCIA"><option value="">Selecione</option><option>Não</option><option>Sim</option></select></div>
+          <div><label for="CO_NIVEL_ESCOLARIDADE">Maior escolaridade concluída</label><input id="CO_NIVEL_ESCOLARIDADE" name="CO_NIVEL_ESCOLARIDADE"></div>
+          <div><label for="CO_TIPO_FORMACAO_ACADEMICA">Tipo de formação superior</label><input id="CO_TIPO_FORMACAO_ACADEMICA" name="CO_TIPO_FORMACAO_ACADEMICA"></div>
+          <div><label for="CO_AREA_DO_CONHECIMENTO_FORMACAO_ACADEMICA">Área do curso</label><input id="CO_AREA_DO_CONHECIMENTO_FORMACAO_ACADEMICA" name="CO_AREA_DO_CONHECIMENTO_FORMACAO_ACADEMICA"></div>
+          <div><label for="CO_CURSO_FORMACAO_ACADEMICA">Curso</label><input id="CO_CURSO_FORMACAO_ACADEMICA" name="CO_CURSO_FORMACAO_ACADEMICA"></div>
+          <div><label for="NO_INSTITUICAO_ENSINO_FORMACAO_ACADEMICA">Instituição de ensino</label><input id="NO_INSTITUICAO_ENSINO_FORMACAO_ACADEMICA" name="NO_INSTITUICAO_ENSINO_FORMACAO_ACADEMICA"></div>
+          <div><label for="NATUREZA_INSTITUICAO_FORMACAO_ACADEMICA">Tipo da instituição</label><input id="NATUREZA_INSTITUICAO_FORMACAO_ACADEMICA" name="NATUREZA_INSTITUICAO_FORMACAO_ACADEMICA"></div>
+          <div><label for="ANO_INICIO_FORMACAO_ACADEMICA">Ano de início</label><input id="ANO_INICIO_FORMACAO_ACADEMICA" name="ANO_INICIO_FORMACAO_ACADEMICA" type="number"></div>
+          <div><label for="ANO_CONCLUSAO_FORMACAO_ACADEMICA">Ano de conclusão</label><input id="ANO_CONCLUSAO_FORMACAO_ACADEMICA" name="ANO_CONCLUSAO_FORMACAO_ACADEMICA" type="number"></div>
+          <div><label for="CO_ENTIDADE_VINCULO">Código INEP da instituição</label><input id="CO_ENTIDADE_VINCULO" name="CO_ENTIDADE_VINCULO"></div>
+          <div><label for="CO_PROFISSIONAL_PERFIL_VINCULO">Perfil</label><input id="CO_PROFISSIONAL_PERFIL_VINCULO" name="CO_PROFISSIONAL_PERFIL_VINCULO"></div>
+          <div><label for="CO_TIPO_VINCULO">Tipo de vínculo</label><input id="CO_TIPO_VINCULO" name="CO_TIPO_VINCULO"></div>
+          <div><label for="SITUACAO_VINCULO_PROFISSIONAL_REDE">Situação do vínculo</label><input id="SITUACAO_VINCULO_PROFISSIONAL_REDE" name="SITUACAO_VINCULO_PROFISSIONAL_REDE"></div>
+          <div><label for="DATA_INICIO_VINCULO_PROFISSIONAL_REDE">Data de início do vínculo</label><input id="DATA_INICIO_VINCULO_PROFISSIONAL_REDE" name="DATA_INICIO_VINCULO_PROFISSIONAL_REDE" type="date"></div>
+          <div><label for="DATA_FIM_VINCULO_PROFISSIONAL_REDE">Data de fim do vínculo</label><input id="DATA_FIM_VINCULO_PROFISSIONAL_REDE" name="DATA_FIM_VINCULO_PROFISSIONAL_REDE" type="date"></div>
+          <div><label for="CO_FUNCAO">Código da função</label><input id="CO_FUNCAO" name="CO_FUNCAO"></div>
+          <div><label for="DATA_INGRESSO">Data de início da função</label><input id="DATA_INGRESSO" name="DATA_INGRESSO" type="date"></div>
+          <div><label for="DATA_FIM">Data do fim da função</label><input id="DATA_FIM" name="DATA_FIM" type="date"></div>
+          <div><label for="CARGA_HORARIA_SEMANAL">Carga horária semanal</label><input id="CARGA_HORARIA_SEMANAL" name="CARGA_HORARIA_SEMANAL" type="number"></div>
+          <div><label for="PROFISSIONAL_IDENTIFICACAO_INSTITUICAO">ID da matrícula</label><input id="PROFISSIONAL_IDENTIFICACAO_INSTITUICAO" name="PROFISSIONAL_IDENTIFICACAO_INSTITUICAO"></div>
+          <div class="full"><label for="AREA_CONHECIMENTO_VINCULO_PROFISSIONAL">Área do conhecimento</label><input id="AREA_CONHECIMENTO_VINCULO_PROFISSIONAL" name="AREA_CONHECIMENTO_VINCULO_PROFISSIONAL"></div>
+        </div>
+
         <h2 style="margin-top: 24px;">Turmas e disciplinas</h2>
         <div class="assignment-box">
           <div>
@@ -464,13 +499,13 @@
       "Adjalmo Pereira Filho",
       "Adriano de Jesus Lima",
       "Alana Leite de Oliveira",
-      "Alessandra de Sousa Gonçalves",
       "Amanda Souza de Oliveira",
       "Ana Alzira Lucena Nicodemos",
       "Ana Paula Santana Tavares",
       "Ana Teresa Quental Santana",
       "Arlany Emanuel da Silva",
       "Cícera Edna Gomes de Souza",
+      "Daniele Rodrigues de Sousa",
       "Diego Vieira Rolim",
       "Edileuza Batista de Oliveira",
       "Edjan Fernandes dos Santos",
@@ -479,6 +514,7 @@
       "Emanuella de Souza Ramalho",
       "Fábio Alex Saraiva Cruz",
       "Flávio Leite Queirós",
+      "Francisca Dayane Ferreira de Sousa",
       "Francisca Laís Arruda Pereira",
       "Francisco Bruno Tavares Silva",
       "Francisco Fabrício de Lacerda Fernandes",
@@ -495,7 +531,6 @@
       "Jonatas Targino de Amorim",
       "José Marcos Ferreira Rocha",
       "José Roberto da Silva",
-      "José Robson Rocha da Silva",
       "Josefa Fernanda Rodrigues Correia",
       "Josemar de Medeiros Cruz",
       "Juliana Máyra Pereira de Souza",
@@ -517,7 +552,7 @@
       "Thiago Henrille Gomes Maia",
       "Tiago Henrique Araújo dos Santos",
       "Vanessa do Nascimento Pinho",
-      "Viviane Souza Vidal de Melo"
+      "Viviane Sousa Vidal de Melo"
     ];
 
     let records = [];
@@ -980,10 +1015,7 @@
       event.preventDefault();
       const data = getFormData();
 
-      if (assignments.length === 0) {
-        alert("Adicione pelo menos uma turma e disciplina.");
-        return;
-      }
+      // Turmas e disciplinas são opcionais no cadastro GpE.
 
       const recordId = data.recordId;
       const record = { ...data, assignments: [...assignments] };
