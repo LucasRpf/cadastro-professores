@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cadastro de Professores</title>
 <style>
-.assignment-box,#assignments,form > h2:nth-of-type(2){display:none!important}
+.assignment-box,#assignments,.assignments-heading{display:block!important}
     * {
       box-sizing: border-box;
     }
@@ -1154,7 +1154,6 @@
       byId.get("issuingAgency")?.remove();
       const labels = {cpf:"CPF*",rg:"RG",name:"Nome*",PROFISSIONAL_NOME_SOCIAL:"Nome Social",birthDate:"Data de Nascimento*",PROFISSIONAL_SEXO:"Sexo*",PROFISSIONAL_GENERO:"Gênero",PROFISSIONAL_RACA_COR:"Raça/Cor*",PROFISSIONAL_QUILOMBOLA:"Autodeclaração quilombola do Profissional da Educação*",PROFISSIONAL_NACIONALIDADE:"Nacionalidade*",PROFISSIONAL_PAIS_NASCIMENTO:"País de nascimento*",PROFISSIONAL_ESTADO_NASCIMENTO:"Estado de nascimento*",PROFISSIONAL_MUNICIPIO_NASCIMENTO:"Município de nascimento*",contact:"Telefone*",email:"E-mail*",CO_NIVEL_ESCOLARIDADE:"Maior nível de escolaridade concluído*",CO_TIPO_ENSINO_MEDIO:"Tipo de Ensino Médio",NATUREZA_INSTITUICAO_MEDIO_PROFISSIONAL:"Natureza da Instituição",PROFISSIONAL_CO_UF_RES:"Estado*",city:"Município*",address:"Logradouro de Residência",addressNumber:"Número de Endereço",neighborhood:"Bairro",PROFISSIONAL_CEP_RES:"CEP",PROFISSIONAL_LOCALIZACAO_GEOGRAFICA:"Localização Geográfica",PROFISSIONAL_LOCALIZACAO_DIFERENCIADA:"Localização Diferenciada",PROFISSIONAL_DEFICIENCIA:"Profissional com deficiência, transtorno do espectro autista ou altas habilidades/superdotação*",CO_TIPO_FORMACAO_ACADEMICA:"Tipo de Formação Superior*",CO_AREA_DO_CONHECIMENTO_FORMACAO_ACADEMICA:"Área do curso*",CO_CURSO_FORMACAO_ACADEMICA:"Curso",NO_INSTITUICAO_ENSINO_FORMACAO_ACADEMICA:"Nome da Instituição de Ensino",NATUREZA_INSTITUICAO_FORMACAO_ACADEMICA:"Tipo da Instituição de Ensino",ANO_INICIO_FORMACAO_ACADEMICA:"Ano de Início",ANO_CONCLUSAO_FORMACAO_ACADEMICA:"Ano de Conclusão",CO_ENTIDADE_VINCULO:"Código INEP da Instituição de Ensino*",CO_PROFISSIONAL_PERFIL_VINCULO:"Perfil",CO_TIPO_VINCULO:"Tipo de Vínculo*",SITUACAO_VINCULO_PROFISSIONAL_REDE:"Situação do Vínculo*",DATA_INICIO_VINCULO_PROFISSIONAL_REDE:"Data de Início do Vínculo*",DATA_FIM_VINCULO_PROFISSIONAL_REDE:"Data de Fim do Vínculo",CO_FUNCAO:"Código da função*",DATA_INGRESSO:"Data de Início da Função*",DATA_FIM:"Data do Fim da Função",CARGA_HORARIA_SEMANAL:"Carga Horária",PROFISSIONAL_IDENTIFICACAO_INSTITUICAO:"Número de Identificação (ID) da Matrícula do Profissional",AREA_CONHECIMENTO_VINCULO_PROFISSIONAL:"Área do conhecimento*",issuingAgency:"Órgão emissor"};
       Object.entries(labels).forEach(([id, text]) => { const field = byId.get(id); const label = field?.querySelector("label"); if (label) label.textContent = text; });
-      document.querySelector(".assignments-heading")?.remove();
     }
     applyExactGpeOrderAndLabels();
     document.querySelector('label[for="DATA_INICIO_VINCULO_PROFISSIONAL_REDE"]').textContent = "Data de Início do Vínculo* (contratação)";
