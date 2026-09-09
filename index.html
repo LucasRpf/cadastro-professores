@@ -1108,6 +1108,19 @@
       document.getElementById("name").focus();
     });
 
+    function orderFieldsLikeGpe() {
+      const firstGrid = document.querySelector("#teacherForm .grid");
+      const grids = [...document.querySelectorAll("#teacherForm .grid")];
+      const fields = grids.flatMap((grid) => [...grid.children]).filter((item) => item.querySelector("input, select"));
+      const order = ["cpf","rg","name","PROFISSIONAL_NOME_SOCIAL","birthDate","PROFISSIONAL_SEXO","PROFISSIONAL_GENERO","PROFISSIONAL_RACA_COR","PROFISSIONAL_QUILOMBOLA","PROFISSIONAL_NACIONALIDADE","PROFISSIONAL_PAIS_NASCIMENTO","PROFISSIONAL_ESTADO_NASCIMENTO","PROFISSIONAL_MUNICIPIO_NASCIMENTO","address","addressNumber","neighborhood","city","contact","email","CO_NIVEL_ESCOLARIDADE","CO_TIPO_FORMACAO_ACADEMICA","CO_AREA_DO_CONHECIMENTO_FORMACAO_ACADEMICA","CO_CURSO_FORMACAO_ACADEMICA","NO_INSTITUICAO_ENSINO_FORMACAO_ACADEMICA","NATUREZA_INSTITUICAO_FORMACAO_ACADEMICA","ANO_INICIO_FORMACAO_ACADEMICA","ANO_CONCLUSAO_FORMACAO_ACADEMICA","CO_ENTIDADE_VINCULO","CO_PROFISSIONAL_PERFIL_VINCULO","CO_TIPO_VINCULO","SITUACAO_VINCULO_PROFISSIONAL_REDE","DATA_INICIO_VINCULO_PROFISSIONAL_REDE","DATA_FIM_VINCULO_PROFISSIONAL_REDE","CO_FUNCAO","DATA_INGRESSO","DATA_FIM","CARGA_HORARIA_SEMANAL","PROFISSIONAL_IDENTIFICACAO_INSTITUICAO","AREA_CONHECIMENTO_VINCULO_PROFISSIONAL","issuingAgency"];
+      const byId = new Map(fields.map((field) => [field.querySelector("input, select").id, field]));
+      order.forEach((id) => { const field = byId.get(id); if (field) firstGrid.appendChild(field); });
+      grids.slice(1).forEach((grid) => { if (!grid.contains(firstGrid)) grid.remove(); });
+      [...document.querySelectorAll("#teacherForm > h2")].forEach((heading) => { if (heading.textContent.includes("Dados da planilha")) heading.remove(); });
+    }
+
+    orderFieldsLikeGpe();
+
     async function startApp() {
       fillSelect(gradeSelectEl, gradeOptions, "Selecione a turma");
       fillSelect(subjectSelectEl, subjectOptions, "Selecione a disciplina");
