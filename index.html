@@ -318,7 +318,7 @@
     <div class="header-content">
       <div class="header-text">
         <h1>Cadastro de Professores</h1>
-        <p>Preencha os dados pessoais e relacione cada turma com a disciplina correspondente.</p>
+        <p></p>
       </div>
       <img class="site-logo" src="assets/lf-sistemas-logo.png" alt="LF Sistemas">
     </div>
@@ -387,6 +387,12 @@
         <h2 style="margin-top: 24px;">Dados da planilha GpE</h2>
         <div class="grid gpe-fields">
           <div><label for="PROFISSIONAL_NOME_SOCIAL">Nome social</label><input id="PROFISSIONAL_NOME_SOCIAL" name="PROFISSIONAL_NOME_SOCIAL"></div>
+          <div><label for="CO_TIPO_ENSINO_MEDIO">Tipo de Ensino Médio</label><input id="CO_TIPO_ENSINO_MEDIO" name="CO_TIPO_ENSINO_MEDIO"></div>
+          <div><label for="NATUREZA_INSTITUICAO_MEDIO_PROFISSIONAL">Natureza da Instituição</label><input id="NATUREZA_INSTITUICAO_MEDIO_PROFISSIONAL" name="NATUREZA_INSTITUICAO_MEDIO_PROFISSIONAL"></div>
+          <div><label for="PROFISSIONAL_CO_UF_RES">Estado</label><input id="PROFISSIONAL_CO_UF_RES" name="PROFISSIONAL_CO_UF_RES"></div>
+          <div><label for="PROFISSIONAL_CEP_RES">CEP</label><input id="PROFISSIONAL_CEP_RES" name="PROFISSIONAL_CEP_RES"></div>
+          <div><label for="PROFISSIONAL_LOCALIZACAO_GEOGRAFICA">Localização Geográfica</label><input id="PROFISSIONAL_LOCALIZACAO_GEOGRAFICA" name="PROFISSIONAL_LOCALIZACAO_GEOGRAFICA"></div>
+          <div><label for="PROFISSIONAL_LOCALIZACAO_DIFERENCIADA">Localização Diferenciada</label><input id="PROFISSIONAL_LOCALIZACAO_DIFERENCIADA" name="PROFISSIONAL_LOCALIZACAO_DIFERENCIADA"></div>
           <div><label for="PROFISSIONAL_SEXO">Sexo</label><select id="PROFISSIONAL_SEXO" name="PROFISSIONAL_SEXO"><option value="">Selecione</option><option>Feminino</option><option>Masculino</option><option>Não informado</option></select></div>
           <div><label for="PROFISSIONAL_GENERO">Gênero</label><input id="PROFISSIONAL_GENERO" name="PROFISSIONAL_GENERO"></div>
           <div><label for="PROFISSIONAL_RACA_COR">Raça/Cor</label><select id="PROFISSIONAL_RACA_COR" name="PROFISSIONAL_RACA_COR"><option value="">Selecione</option><option>Branca</option><option>Preta</option><option>Parda</option><option>Amarela</option><option>Indígena</option><option>Não declarada</option></select></div>
@@ -418,7 +424,7 @@
           <div class="full"><label for="AREA_CONHECIMENTO_VINCULO_PROFISSIONAL">Área do conhecimento</label><input id="AREA_CONHECIMENTO_VINCULO_PROFISSIONAL" name="AREA_CONHECIMENTO_VINCULO_PROFISSIONAL"></div>
         </div>
 
-        <h2 style="margin-top: 24px;">Turmas e disciplinas</h2>
+        <h2 class="assignments-heading" style="margin-top: 24px;">Turmas e disciplinas</h2>
         <div class="assignment-box">
           <div>
             <label for="gradeSelect">Turma</label>
@@ -1115,11 +1121,24 @@
       const order = ["cpf","rg","name","PROFISSIONAL_NOME_SOCIAL","birthDate","PROFISSIONAL_SEXO","PROFISSIONAL_GENERO","PROFISSIONAL_RACA_COR","PROFISSIONAL_QUILOMBOLA","PROFISSIONAL_NACIONALIDADE","PROFISSIONAL_PAIS_NASCIMENTO","PROFISSIONAL_ESTADO_NASCIMENTO","PROFISSIONAL_MUNICIPIO_NASCIMENTO","address","addressNumber","neighborhood","city","contact","email","CO_NIVEL_ESCOLARIDADE","CO_TIPO_FORMACAO_ACADEMICA","CO_AREA_DO_CONHECIMENTO_FORMACAO_ACADEMICA","CO_CURSO_FORMACAO_ACADEMICA","NO_INSTITUICAO_ENSINO_FORMACAO_ACADEMICA","NATUREZA_INSTITUICAO_FORMACAO_ACADEMICA","ANO_INICIO_FORMACAO_ACADEMICA","ANO_CONCLUSAO_FORMACAO_ACADEMICA","CO_ENTIDADE_VINCULO","CO_PROFISSIONAL_PERFIL_VINCULO","CO_TIPO_VINCULO","SITUACAO_VINCULO_PROFISSIONAL_REDE","DATA_INICIO_VINCULO_PROFISSIONAL_REDE","DATA_FIM_VINCULO_PROFISSIONAL_REDE","CO_FUNCAO","DATA_INGRESSO","DATA_FIM","CARGA_HORARIA_SEMANAL","PROFISSIONAL_IDENTIFICACAO_INSTITUICAO","AREA_CONHECIMENTO_VINCULO_PROFISSIONAL","issuingAgency"];
       const byId = new Map(fields.map((field) => [field.querySelector("input, select").id, field]));
       order.forEach((id) => { const field = byId.get(id); if (field) firstGrid.appendChild(field); });
+      ["CO_TIPO_ENSINO_MEDIO","NATUREZA_INSTITUICAO_MEDIO_PROFISSIONAL","PROFISSIONAL_CO_UF_RES","PROFISSIONAL_CEP_RES","PROFISSIONAL_LOCALIZACAO_GEOGRAFICA","PROFISSIONAL_LOCALIZACAO_DIFERENCIADA"].forEach((id) => { const field = byId.get(id); if (field) firstGrid.appendChild(field); });
       grids.slice(1).forEach((grid) => { if (!grid.contains(firstGrid)) grid.remove(); });
       [...document.querySelectorAll("#teacherForm > h2")].forEach((heading) => { if (heading.textContent.includes("Dados da planilha")) heading.remove(); });
     }
 
     orderFieldsLikeGpe();
+    function applyExactGpeOrderAndLabels() {
+      const grid = document.querySelector("#teacherForm .grid");
+      const fields = [...grid.children].filter((item) => item.querySelector("input, select"));
+      const byId = new Map(fields.map((field) => [field.querySelector("input, select").id, field]));
+      const exactOrder = ["cpf","rg","name","PROFISSIONAL_NOME_SOCIAL","birthDate","PROFISSIONAL_SEXO","PROFISSIONAL_GENERO","PROFISSIONAL_RACA_COR","PROFISSIONAL_QUILOMBOLA","PROFISSIONAL_NACIONALIDADE","PROFISSIONAL_PAIS_NASCIMENTO","PROFISSIONAL_ESTADO_NASCIMENTO","PROFISSIONAL_MUNICIPIO_NASCIMENTO","contact","email","CO_NIVEL_ESCOLARIDADE","CO_TIPO_ENSINO_MEDIO","NATUREZA_INSTITUICAO_MEDIO_PROFISSIONAL","PROFISSIONAL_CO_UF_RES","city","address","addressNumber","neighborhood","PROFISSIONAL_CEP_RES","PROFISSIONAL_LOCALIZACAO_GEOGRAFICA","PROFISSIONAL_LOCALIZACAO_DIFERENCIADA","PROFISSIONAL_DEFICIENCIA","CO_TIPO_FORMACAO_ACADEMICA","CO_AREA_DO_CONHECIMENTO_FORMACAO_ACADEMICA","CO_CURSO_FORMACAO_ACADEMICA","NO_INSTITUICAO_ENSINO_FORMACAO_ACADEMICA","NATUREZA_INSTITUICAO_FORMACAO_ACADEMICA","ANO_INICIO_FORMACAO_ACADEMICA","ANO_CONCLUSAO_FORMACAO_ACADEMICA","CO_ENTIDADE_VINCULO","CO_PROFISSIONAL_PERFIL_VINCULO","CO_TIPO_VINCULO","SITUACAO_VINCULO_PROFISSIONAL_REDE","DATA_INICIO_VINCULO_PROFISSIONAL_REDE","DATA_FIM_VINCULO_PROFISSIONAL_REDE","CO_FUNCAO","DATA_INGRESSO","DATA_FIM","CARGA_HORARIA_SEMANAL","PROFISSIONAL_IDENTIFICACAO_INSTITUICAO","AREA_CONHECIMENTO_VINCULO_PROFISSIONAL"];
+      exactOrder.forEach((id) => { if (byId.has(id)) grid.appendChild(byId.get(id)); });
+      byId.get("issuingAgency")?.remove();
+      const labels = {cpf:"CPF*",rg:"RG",name:"Nome*",PROFISSIONAL_NOME_SOCIAL:"Nome Social",birthDate:"Data de Nascimento*",PROFISSIONAL_SEXO:"Sexo*",PROFISSIONAL_GENERO:"Gênero",PROFISSIONAL_RACA_COR:"Raça/Cor*",PROFISSIONAL_QUILOMBOLA:"Autodeclaração quilombola do Profissional da Educação*",PROFISSIONAL_NACIONALIDADE:"Nacionalidade*",PROFISSIONAL_PAIS_NASCIMENTO:"País de nascimento*",PROFISSIONAL_ESTADO_NASCIMENTO:"Estado de nascimento*",PROFISSIONAL_MUNICIPIO_NASCIMENTO:"Município de nascimento*",contact:"Telefone*",email:"E-mail*",CO_NIVEL_ESCOLARIDADE:"Maior nível de escolaridade concluído*",CO_TIPO_ENSINO_MEDIO:"Tipo de Ensino Médio",NATUREZA_INSTITUICAO_MEDIO_PROFISSIONAL:"Natureza da Instituição",PROFISSIONAL_CO_UF_RES:"Estado*",city:"Município*",address:"Logradouro de Residência",addressNumber:"Número de Endereço",neighborhood:"Bairro",PROFISSIONAL_CEP_RES:"CEP",PROFISSIONAL_LOCALIZACAO_GEOGRAFICA:"Localização Geográfica",PROFISSIONAL_LOCALIZACAO_DIFERENCIADA:"Localização Diferenciada",PROFISSIONAL_DEFICIENCIA:"Profissional com deficiência, transtorno do espectro autista ou altas habilidades/superdotação*",CO_TIPO_FORMACAO_ACADEMICA:"Tipo de Formação Superior*",CO_AREA_DO_CONHECIMENTO_FORMACAO_ACADEMICA:"Área do curso*",CO_CURSO_FORMACAO_ACADEMICA:"Curso",NO_INSTITUICAO_ENSINO_FORMACAO_ACADEMICA:"Nome da Instituição de Ensino",NATUREZA_INSTITUICAO_FORMACAO_ACADEMICA:"Tipo da Instituição de Ensino",ANO_INICIO_FORMACAO_ACADEMICA:"Ano de Início",ANO_CONCLUSAO_FORMACAO_ACADEMICA:"Ano de Conclusão",CO_ENTIDADE_VINCULO:"Código INEP da Instituição de Ensino*",CO_PROFISSIONAL_PERFIL_VINCULO:"Perfil",CO_TIPO_VINCULO:"Tipo de Vínculo*",SITUACAO_VINCULO_PROFISSIONAL_REDE:"Situação do Vínculo*",DATA_INICIO_VINCULO_PROFISSIONAL_REDE:"Data de Início do Vínculo*",DATA_FIM_VINCULO_PROFISSIONAL_REDE:"Data de Fim do Vínculo",CO_FUNCAO:"Código da função*",DATA_INGRESSO:"Data de Início da Função*",DATA_FIM:"Data do Fim da Função",CARGA_HORARIA_SEMANAL:"Carga Horária",PROFISSIONAL_IDENTIFICACAO_INSTITUICAO:"Número de Identificação (ID) da Matrícula do Profissional",AREA_CONHECIMENTO_VINCULO_PROFISSIONAL:"Área do conhecimento*",issuingAgency:"Órgão emissor"};
+      Object.entries(labels).forEach(([id, text]) => { const field = byId.get(id); const label = field?.querySelector("label"); if (label) label.textContent = text; });
+      document.querySelector(".assignments-heading")?.remove();
+    }
+    applyExactGpeOrderAndLabels();
 
     async function startApp() {
       fillSelect(gradeSelectEl, gradeOptions, "Selecione a turma");
