@@ -914,25 +914,29 @@
         });
       });
 
-      const pages = sortedRecords.map((record) => `
-        <section class="page">
-          <h1>${escapeHtml(record.name)}</h1>
-          <table>
-            <tr><th>Nome completo</th><td>${escapeHtml(record.name)}</td></tr>
-            <tr><th>E-mail</th><td>${escapeHtml(record.email)}</td></tr>
-            <tr><th>CPF</th><td>${escapeHtml(record.cpf)}</td></tr>
-            <tr><th>RG</th><td>${escapeHtml(record.rg)}</td></tr>
-            <tr><th>Órgão emissor</th><td>${escapeHtml(record.issuingAgency)}</td></tr>
-            <tr><th>Data de nascimento</th><td>${escapeHtml(record.birthDate)}</td></tr>
-            <tr><th>Endereço</th><td>${escapeHtml(record.address)}</td></tr>
-            <tr><th>Número</th><td>${escapeHtml(record.addressNumber)}</td></tr>
-            <tr><th>Bairro</th><td>${escapeHtml(record.neighborhood)}</td></tr>
-            <tr><th>Município</th><td>${escapeHtml(record.city)}</td></tr>
-            <tr><th>Contato</th><td>${escapeHtml(record.contact)}</td></tr>
-            <tr><th>Turmas e disciplinas</th><td>${escapeHtml(formatAssignments(normalizeAssignments(record)))}</td></tr>
-          </table>
-        </section>
-      `).join("");
+      const pages = sortedRecords.map((record) => {
+        const recordRows = Array.from(form.querySelectorAll("input, select, textarea"))
+          .filter((field) => field.name && field.name !== "recordId")
+          .map((field) => {
+            const label = document.querySelector(`label[for="${CSS.escape(field.id)}"]`);
+            return {
+              label: label ? label.textContent.trim() : field.name,
+              value: String(record[field.name] ?? (field.name === "name" ? record.name : "")).trim()
+            };
+          });
+        const allRows = recordRows.map(({ label, value }) => `
+          <tr><th>${escapeHtml(label)}</th><td>${escapeHtml(value)}</td></tr>
+        `).join("");
+        return `
+          <section class="page">
+            <h1>${escapeHtml(record.name)}</h1>
+            <table>
+              ${allRows}
+              <tr><th>Turmas e disciplinas</th><td>${escapeHtml(formatAssignments(normalizeAssignments(record)))}</td></tr>
+            </table>
+          </section>
+        `;
+      }).join("");
 
       const report = window.open("", "_blank");
       if (!report) {
